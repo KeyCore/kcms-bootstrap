@@ -1,0 +1,9 @@
+{
+
+  "app": "npx ts-node --prefer-ts-exts bin/kcms-bootstrap.ts",
+  "context": {
+    "@aws-cdk/core:bootstrapQualifier": "keycore",
+    "allowedIpAddressRanges": ["0.0.0.0/1", "128.0.0.0/1"],
+    "idpMetadataPath": "DUMMY"
+  }
+}
