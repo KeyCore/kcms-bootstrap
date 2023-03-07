@@ -5,4 +5,6 @@ import { BootstrapStack } from '../lib/stacks/bootstrap-stack';
 const app = new cdk.App();
 
 
-new BootstrapStack(app, 'BootstrapStack', {});
+new BootstrapStack(app, 'BootstrapStack', {
+    serviceAccount: "685074242867"
+});
