@@ -1,6 +1,10 @@
 {
   "app": "npx ts-node --prefer-ts-exts bin/kcms-bootstrap.ts",
   "context": {
-    "@aws-cdk/core:bootstrapQualifier": "keycore"
+    "@aws-cdk/core:bootstrapQualifier": "keycore",
+    "serviceAccount": "",
+    "portfolioId": "",
+    "toolchainName": "",
+    "toolchainVersion": ""
   }
 }

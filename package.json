@@ -26,6 +26,7 @@
     "yarn": "^1.22.19"
   },
   "dependencies": {
+    "@cdklabs/cdk-ssm-documents": "^0.0.34",
     "aws-cdk-lib": "^2.67.0",
     "constructs": "^10.1.270",
     "source-map-support": "^0.5.21"
