@@ -5,12 +5,9 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf cdk.out ts-build",
-    "synth": "yarn build; yarn cdk synth",
-    "deploy": "yarn cdk deploy --require-approval never",
-    "bootstrap": "yarn cdk bootstrap --app '' --qualifier keycore --toolkit-stack-name KeyCoreCDKToolkit --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess",
-    "publish": "ls -la",
-    "watch": "tsc -w",
-    "test": "jest",
+    "synth": "npm build; npm cdk synth",
+    "deploy": "npm cdk deploy --require-approval never",
+    "bootstrap": "npm cdk bootstrap --app '' --qualifier keycore --toolkit-stack-name KeyCoreCDKToolkit --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess",
     "cdk": "cdk"
   },
   "devDependencies": {
