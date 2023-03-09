@@ -6,8 +6,8 @@
     "build": "tsc",
     "clean": "rm -rf cdk.out ts-build",
     "synth": "npm run build; npm run cdk synth",
-    "deploy": "npm run cdk deploy --require-approval never",
-    "bootstrap": "npm run cdk bootstrap --app '' --qualifier keycore --toolkit-stack-name KeyCoreCDKToolkit --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess",
+    "deploy": "npm run cdk deploy -- --require-approval never BootstrapStack",
+    "bootstrap": "npm run cdk bootstrap -- --app '' --qualifier keycore --toolkit-stack-name KeyCoreCDKToolkit --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess",
     "cdk": "cdk"
   },
   "devDependencies": {
