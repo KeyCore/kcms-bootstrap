@@ -1,20 +1,25 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 
+
+export type KcmsToolchainContext = {
+    portfolioId: string;
+    productName: string;
+    productId: string;
+    version: string;
+    provisionedName: string;
+}
 export type Context = {
     serviceAccount: string;
-    portfolioId: string;
-    toolchainName: string;
-    toolchainVersion: string;
+    kcmsToolchainProperties: KcmsToolchainContext;
 }
 
 export function getContext(scope: Construct): Context {
     try {
         return {
             serviceAccount: scope.node.tryGetContext('serviceAccount'),
-            portfolioId: scope.node.tryGetContext('portfolioId'),
-            toolchainName: scope.node.tryGetContext('toolchainName'),
-            toolchainVersion: scope.node.tryGetContext('toolchainVersion')
+            kcmsToolchainProperties : scope.node.tryGetContext('kcmsToolchainProperties'),
+
         }
     } catch (error) {
         console.error(error);
