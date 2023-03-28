@@ -8,7 +8,7 @@ import { Context } from '../../context';
 
 
 
-export class BootstrapStack extends cdk.Stack {
+export class KCMSBootstrapStack extends cdk.Stack {
 
     constructor(scope: Construct, id: string, props: cdk.StackProps, context: Context) {
         super(scope, id, props);
