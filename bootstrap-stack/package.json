@@ -7,7 +7,8 @@
     "clean": "rm -rf cdk.out ts-build",
     "synth": "yarn build; yarn cdk synth",
     "deploy": "yarn cdk deploy --require-approval never",
-    "bootstrap": "yarn cdk bootstrap --app '' --qualifier keycore --toolkit-stack-name KeyCoreCDKToolkit --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess",
+    "cdk:bootstrap": "yarn cdk bootstrap --app '' --qualifier kcms --toolkit-stack-name KCMSCDKToolkit --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess",
+    "kcms:bootstrap": "yarn synth && yarn deploy KCMSBootstrapStack",
     "cdk": "cdk"
   },
   "devDependencies": {
