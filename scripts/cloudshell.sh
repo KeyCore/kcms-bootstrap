@@ -2,7 +2,7 @@
 
 set -e
 
-if [! -d "bootstrap-stack" ] 
+if [! -d "bootstrap-stack" ] ; then
     echo "Error: Directory bootstrap-stack does not exists, please cd into kcms-bootstrap directory and run this script again."
     exit 1
 fi
