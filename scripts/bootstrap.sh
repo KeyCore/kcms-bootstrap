@@ -9,6 +9,7 @@ aws_region=$AWS_DEFAULT_REGION
 echo "Bootstrapping $aws_account_id/$aws_region"
 cdk bootstrap --qualifier keycore --toolkit-stack-name KeyCoreCDKToolkit --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess $aws_account_id/$aws_region
 
+cd .. 
 yarn install
 yarn synth
 yarn deploy KCMSBootstrapStack
