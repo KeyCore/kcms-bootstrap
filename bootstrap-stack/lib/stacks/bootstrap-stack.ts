@@ -14,16 +14,22 @@ export class KCMSBootstrapStack extends cdk.Stack {
         super(scope, id, props);
 
         const onboardingRole = new iam.Role(this, 'KeyCoreOnboardingRole', {
-            assumedBy: new iam.AccountPrincipal(context.serviceAccount),
+            assumedBy: new iam.CompositePrincipal(
+                new iam.AccountPrincipal(context.serviceAccount)
+            ),
             roleName: 'KeyCoreOnboardingRole',
             managedPolicies: [
-                iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess')
+                iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess') // TODO - reduce permissions
             ]
         });
         onboardingRole.grantAssumeRole(new iam.ServicePrincipal('ssm.amazonaws.com'));
 
         const automationRole = new iam.Role(this, 'KeyCoreOnboardingAutomationRole', {
-            assumedBy: new iam.ServicePrincipal('ssm.amazonaws.com'),
+            assumedBy: new iam.CompositePrincipal(
+                new iam.ServicePrincipal('ssm.amazonaws.com'),
+                new iam.ServicePrincipal('states.amazonaws.com'),
+                new iam.AccountPrincipal(context.serviceAccount)
+            ),
             roleName: 'KeyCoreOnboardingAutomationRole',
             managedPolicies: [
                 iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess')
