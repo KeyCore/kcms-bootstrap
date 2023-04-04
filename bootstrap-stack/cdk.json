@@ -3,8 +3,8 @@
   "context": {
     "@aws-cdk/core:bootstrapQualifier": "kcms",
     
-    "serviceAccount": "685074242867",
-
+    "serviceAccount": "907174171861",
+    "serviceAccountStateMachineArn": "arn:aws:states:eu-west-1:907174171861:stateMachine:KeyCoreOperations",
     "kcmsToolchainProperties": {
       "portfolioId": "port-eh27jfz7trkug",
       "productName": "KeyCoreToolchainCoreProduct",

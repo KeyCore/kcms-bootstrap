@@ -11,6 +11,7 @@ export type KcmsToolchainContext = {
 }
 export type Context = {
     serviceAccount: string;
+    serviceAccountStateMachineArn: string;
     kcmsToolchainProperties: KcmsToolchainContext;
 }
 
@@ -18,6 +19,7 @@ export function getContext(scope: Construct): Context {
     try {
         return {
             serviceAccount: scope.node.tryGetContext('serviceAccount'),
+            serviceAccountStateMachineArn: scope.node.tryGetContext('serviceAccountStateMachineArn'),
             kcmsToolchainProperties : scope.node.tryGetContext('kcmsToolchainProperties'),
 
         }

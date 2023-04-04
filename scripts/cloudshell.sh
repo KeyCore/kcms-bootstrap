@@ -25,4 +25,4 @@ yarn cdk:bootstrap $aws_account_id/$aws_region
 yarn kcms:bootstrap
 
 cd $HOME
-rm -rf /home/bootstrap-stack
+sudo rm -rf /home/bootstrap-stack

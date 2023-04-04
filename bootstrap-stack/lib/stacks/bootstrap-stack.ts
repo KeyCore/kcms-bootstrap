@@ -24,16 +24,16 @@ export class KCMSBootstrapStack extends cdk.Stack {
         });
         onboardingRole.grantAssumeRole(new iam.ServicePrincipal('ssm.amazonaws.com'));
 
+
         const automationRole = new iam.Role(this, 'KeyCoreOnboardingAutomationRole', {
             assumedBy: new iam.CompositePrincipal(
-                new iam.ServicePrincipal('ssm.amazonaws.com'),
-                new iam.ServicePrincipal('states.amazonaws.com'),
-                new iam.AccountPrincipal(context.serviceAccount)
+                new iam.ArnPrincipal(`arn:aws:iam::${context.serviceAccount}:role/KeyCorePortfolioSharingRole`)
             ),
+            externalIds: [context.serviceAccount],
             roleName: 'KeyCoreOnboardingAutomationRole',
             managedPolicies: [
-                iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess')
-            ]
+                iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess') // TODO - reduce permissions
+            ],        
         });
 
         const kcmsToolchainProperties = context.kcmsToolchainProperties;
