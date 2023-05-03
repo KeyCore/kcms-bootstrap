@@ -24,59 +24,16 @@ export class KCMSBootstrapStack extends cdk.Stack {
         });
         onboardingRole.grantAssumeRole(new iam.ServicePrincipal('ssm.amazonaws.com'));
 
-
-        const automationRole = new iam.Role(this, 'KeyCoreOnboardingAutomationRole', {
+        new iam.Role(this, 'KeyCoreOnboardingAutomationRole', {
             assumedBy: new iam.CompositePrincipal(
-                new iam.ArnPrincipal(`arn:aws:iam::${context.serviceAccount}:role/KeyCorePortfolioSharingRole`)
+                new iam.AccountPrincipal(context.serviceAccount)
             ),
             externalIds: [context.serviceAccount],
             roleName: 'KeyCoreOnboardingAutomationRole',
             managedPolicies: [
                 iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess') // TODO - reduce permissions
-            ],        
-        });
-
-        const kcmsToolchainProperties = context.kcmsToolchainProperties;
-
-        const automationDoc = new ssm_doc.AutomationDocument(this, "BootstrapKeyCoreToolchain", {
-            documentFormat: ssm_doc.DocumentFormat.YAML,
-            assumeRole: new ssm_doc.HardCodedString(automationRole.roleArn),
-            docInputs: [
-                ssm_doc.Input.ofTypeString('AutomationAssumeRole', { defaultValue: automationRole.roleArn }),
-                ssm_doc.Input.ofTypeString('ServiceAccount', { defaultValue: context.serviceAccount }),
-                ssm_doc.Input.ofTypeString('PortfolioId', { defaultValue: kcmsToolchainProperties.portfolioId }),
-                ssm_doc.Input.ofTypeString('ProductName', { defaultValue: kcmsToolchainProperties.productName }),
-                ssm_doc.Input.ofTypeString('ProvisionedProductName', { defaultValue: kcmsToolchainProperties.provisionedName }),
-                ssm_doc.Input.ofTypeString('Version', { defaultValue: kcmsToolchainProperties.version }),
             ]
         });
-        cdk.Tags.of(automationDoc).add('Name', 'BootstrapKeyCoreToolchain');
-
-        automationDoc.addStep(new ssm_doc.AwsApiStep(this, 'AcceptPortfolioShare', {
-            service: ssm_doc.AwsService.SERVICE_CATALOG,
-            pascalCaseApi: 'AcceptPortfolioShare',
-            apiParams: { PortfolioId: "{{PortfolioId}}", PortfolioShareType: 'IMPORTED' },
-            outputs: [],
-        }));
-
-        automationDoc.addStep(new ssm_doc.AwsApiStep(this, 'AssociatePrincipalWithPortfolio', {
-            service: ssm_doc.AwsService.SERVICE_CATALOG,
-            pascalCaseApi: 'AssociatePrincipalWithPortfolio',
-            apiParams: { PortfolioId: "{{PortfolioId}}", PrincipalARN: automationRole.roleArn, PrincipalType: 'IAM' },
-            outputs: [],
-        }));
-
-        automationDoc.addStep(new ssm_doc.SleepStep(this, 'Sleep', {
-            sleepSeconds: 15
-        }));
-
-        automationDoc.addStep(new ssm_doc.AwsApiStep(this, 'ProvisionProduct', {
-            service: ssm_doc.AwsService.SERVICE_CATALOG,
-            pascalCaseApi: 'ProvisionProduct',
-            apiParams: { ProductName: "{{ProductName}}", ProvisionedProductName: "{{ProvisionedProductName}}", ProvisioningArtifactName: "{{Version}}", ProvisioningParameters: [{ Key: "ServiceAccount", Value: "{{ServiceAccount}}" }] },
-            outputs: []
-        }));
-
     }
 
 }

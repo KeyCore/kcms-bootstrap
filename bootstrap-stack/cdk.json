@@ -2,15 +2,6 @@
   "app": "npx ts-node --prefer-ts-exts bin/kcms-bootstrap.ts",
   "context": {
     "@aws-cdk/core:bootstrapQualifier": "kcms",
-    
-    "serviceAccount": "907174171861",
-    "serviceAccountStateMachineArn": "arn:aws:states:eu-west-1:907174171861:stateMachine:KeyCoreOperations",
-    "kcmsToolchainProperties": {
-      "portfolioId": "port-eh27jfz7trkug",
-      "productName": "KeyCoreToolchainCoreProduct",
-      "productId": "prod-csfbnbhcqwd6i",
-      "version": "1.0.5",
-      "provisionedName": "KeyCoreToolchainCore"
-    }
+    "serviceAccount": "907174171861"
   }
 }
