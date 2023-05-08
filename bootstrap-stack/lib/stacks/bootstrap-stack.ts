@@ -1,4 +1,3 @@
-import * as ssm_doc from '@cdklabs/cdk-ssm-documents';
 import * as cdk from 'aws-cdk-lib';
 import {
     aws_iam as iam
