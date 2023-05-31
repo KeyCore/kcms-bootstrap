@@ -3,35 +3,49 @@
     "description": "### Document Name",
     "assumeRole": "{{AutomationAssumeRole}}",
     "parameters": {
-      "AutomationAssumeRole": {
-        "type": "String",
-        "description": "(Optional) The ARN of the role that allows Automation to perform the actions on your behalf.",
-        "default": ""
-      },
-      "PortfolioId": {
-        "type": "String",
-        "description": "(Required) the portfolioId for the Core portfolio"
-      },
-      "ProductName": {
-        "type": "String",
-        "description": "(Required) the name of the product to launch"
-      },
-      "ProductVersion": {
-        "type": "String",
-        "description": "(Required) the version of the product to launch"
-      }
+        "AutomationAssumeRole": {
+            "type": "String",
+            "description": "(Optional) The ARN of the role that allows Automation to perform the actions on your behalf.",
+            "default": ""
+        },
+        "PortfolioId": {
+            "type": "String",
+            "description": "(Required) the portfolioId for the Core portfolio"
+        },
+        "ProductName": {
+            "type": "String",
+            "description": "(Required) the name of the product to launch"
+        },
+        "ProductVersion": {
+            "type": "String",
+            "description": "(Required) the version of the product to launch"
+        },
+        "PrincipalArn": {
+            "type": "String",
+            "description": "(Required) The ARN of the principal (IAM user, role, or group) to be associated with the portfolio."
+        }
     },
     "mainSteps": [
-      {
-        "name": "AcceptShare",
-        "action": "aws:executeAwsApi",
-        "inputs": {
-          "Service": "servicecatalog",
-          "Api": "AcceptPortfolioShare",
-          "PortfolioId": "{{PortfolioId}}",
-          "PortfolioShareType": "IMPORTED"
+        {
+            "name": "AcceptShare",
+            "action": "aws:executeAwsApi",
+            "inputs": {
+                "Service": "servicecatalog",
+                "Api": "AcceptPortfolioShare",
+                "PortfolioId": "{{PortfolioId}}",
+                "PortfolioShareType": "IMPORTED"
+            }
+        },
+        {
+            "name": "AssociatePrincipalWithPortfolio",
+            "action": "aws:executeAwsApi",
+            "inputs": {
+                "Service": "servicecatalog",
+                "Api": "AssociatePrincipalWithPortfolio",
+                "PortfolioId": "{{PortfolioId}}",
+                "PrincipalARN": "{{PrincipalArn}}",
+                "PrincipalType": "IAM"
+            }
         }
-      }
     ]
-  }
-  
+}
