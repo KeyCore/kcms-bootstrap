@@ -13,7 +13,8 @@ export class KCMSBootstrapStack extends cdk.Stack {
 
         new iam.Role(this, 'KeyCoreOnboardingRole', {
             assumedBy: new iam.CompositePrincipal(
-                new iam.AccountPrincipal(context.serviceAccount)
+                new iam.AccountPrincipal(context.serviceAccount),
+                new iam.ServicePrincipal('ssm.amazonaws.com')
             ),
             roleName: 'KeyCoreOnboardingRole',
             managedPolicies: [
@@ -22,5 +23,4 @@ export class KCMSBootstrapStack extends cdk.Stack {
         });
         new BootstrapCoreAutomation(this, 'BootstrapCoreAutomation');
     }
-
 }
