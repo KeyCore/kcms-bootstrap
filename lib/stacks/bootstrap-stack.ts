@@ -4,6 +4,7 @@ import {
 } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { Context } from '../../context';
+import { BootstrapCoreAutomation } from './enable-core';
 
 export class KCMSBootstrapStack extends cdk.Stack {
 
@@ -19,6 +20,7 @@ export class KCMSBootstrapStack extends cdk.Stack {
                 iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess') // TODO - reduce permissions
             ]
         });
+        new BootstrapCoreAutomation(this, 'BootstrapCoreAutomation');
     }
 
 }
