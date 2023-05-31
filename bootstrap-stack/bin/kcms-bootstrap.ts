@@ -6,4 +6,4 @@ import { getContext, stackProps } from '../context';
 
 const app = new cdk.App();
 const context = getContext(app);
-new KCMSBootstrapStack(app, 'KCMSBootstrapStack', {}, context);
+new KCMSBootstrapStack(app, 'KCMSBootstrapStack', stackProps("953913856690", "eu-west-1") , context);
