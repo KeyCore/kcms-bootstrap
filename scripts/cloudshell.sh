@@ -8,7 +8,7 @@ sudo npm install --user npm@latest yarn
 npm config set cache $PWD/npm-cache
 yarn config set cache-folder $PWD/yarn-cache
 yarn install
-
+yarn synth
 aws_account_id=$(aws sts get-caller-identity --query Account --output text)
 aws_region=$AWS_DEFAULT_REGION
 
