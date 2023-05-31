@@ -2,7 +2,7 @@
 
 set -e
 
-sudo npm install --user npm@latest
+sudo npm install -g npm@latest
 npm config set cache $PWD/npm-cache
 npm install
 
