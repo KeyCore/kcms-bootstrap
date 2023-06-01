@@ -7,7 +7,6 @@ import { Context } from '../../context';
 import { BootstrapCoreAutomation } from './enable-core';
 
 export class KCMSBootstrapStack extends cdk.Stack {
-
     constructor(scope: Construct, id: string, props: cdk.StackProps, context: Context) {
         super(scope, id, props);
 

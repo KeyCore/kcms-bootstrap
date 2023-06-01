@@ -19,7 +19,7 @@ export class BootstrapCoreAutomation extends Construct {
     constructor(scope: Construct, id: string) {
         super(scope, id);
 
-        
+
         new ssm.CfnDocument(this, 'Document', {
             content: this.loadDocumentContent(path.join(__dirname, './bootstrap-core-document.json')),
             documentFormat: 'YAML',
@@ -29,7 +29,8 @@ export class BootstrapCoreAutomation extends Construct {
                 key: 'Name',
                 value: 'kcms-bootstrap-core',
             }],
-            updateMethod: 'Replace'
+            updateMethod: 'NewVersion',
+            versionName: '6',
         });
     }
 }

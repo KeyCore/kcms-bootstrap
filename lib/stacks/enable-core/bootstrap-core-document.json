@@ -16,6 +16,10 @@
             "type": "String",
             "description": "(Required) the name of the product to launch"
         },
+        "ProvisionedProductName": {
+            "type": "String",
+            "description": "(Required) the name of the provisioned product to launch"
+        },
         "ProductVersion": {
             "type": "String",
             "description": "(Required) the version of the product to launch"
@@ -46,6 +50,80 @@
                 "PrincipalARN": "{{PrincipalArn}}",
                 "PrincipalType": "IAM"
             }
+        },
+        {
+            "name": "sleep",
+            "action": "aws:sleep",
+            "inputs": {
+                "Duration": "PT10S"
+            }
+        },
+        {
+            "name": "SearchProvisionedProducts",
+            "action": "aws:executeAwsApi",
+            "inputs": {
+                "Service": "servicecatalog",
+                "Api": "SearchProvisionedProducts",
+                "Filters": {
+                    "SearchQuery": [
+                        "name:{{ProvisionedProductName}}"
+                    ]
+                }
+            },
+            "outputs": [
+                {
+                    "Name": "ProvisionedProductsId",
+                    "Selector": "$.ProvisionedProducts[0].Id"
+                }
+            ]
+        },
+        {
+            "action": "aws:branch",
+            "name": "BranchBasedOnSearchResult",
+            "inputs": {
+                "Choices": [
+                    {
+                        "Variable": "$.ProvisionedProductsId",
+                        "StringEquals": "",
+                        "NextStep": "UpdateProvisionedProduct"
+                    }
+                ],
+                "DefaultChoice": {
+                    "NextStep": "ProvisionProduct"
+                }
+            }
+        },
+        {
+            "action": "aws:executeAwsApi",
+            "name": "UpdateProvisionedProduct",
+            "inputs": {
+                "Service": "servicecatalog",
+                "Api": "UpdateProvisionedProduct",
+                "UpdateToken": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", 
+                "ProductName": "{{ProductName}}",
+                "ProvisionedProductName": "{{ProvisionedProductName}}",
+                "ProvisioningArtifactName": "{{ProvisioningArtifactName}}"
+                
+            }
+        },
+        {
+            "action": "aws:executeAwsApi",
+            "name": "ProvisionProduct",
+            "inputs": {
+                "Service": "servicecatalog",
+                "Api": "UpdateProvisionedProduct",
+                "ProvisionedProductId": "{{ProvisionedProductsId}}",
+                "ProductId": "{{ProductName}}",
+                "ProvisionedProductName": "{{ProvisionedProductName}}",
+                "ProvisioningArtifactId": "{{ProductVersion}}",
+                "ProvisioningParameters": [
+                    {
+                        "Key": "Owner",
+                        "Value": "{{PrincipalArn}}"
+                    }
+                ]
+            }
         }
+
     ]
 }
