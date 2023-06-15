@@ -23,6 +23,7 @@ run_bootstrapping() {
 
     echo "Bootstrapping $aws_account_id/$aws_region"
     npm run cdk:bootstrap $aws_account_id/$aws_region
+    npm run synth -- --context service-account=$service_account
     npm run kcms:bootstrap -- --context service-account=$service_account
 }
 
