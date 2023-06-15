@@ -58,6 +58,28 @@ export class BootstrapBaseAutomation extends Construct {
                 schemaVersion: '0.3',
                 assumeRole: executionRole.roleArn,
                 description: 'KCMS - Enable Base Automation',
+                parameters: {
+                    PortfolioId: {
+                        type: 'String',
+                        description: '(Required) Portfolio Id',
+                    },
+                    PrincipalARN: {
+                        type: 'String',
+                        description: '(Required) Principal ARN'
+                    },
+                    ProductName: {
+                        type: 'String',
+                        description: '(Required) Product Name'
+                    },
+                    ProvisionedProductName: {
+                        type: 'String',
+                        description: '(Required) Provisioned Product Name'
+                    },
+                    ProvisioningArtifactName: {
+                        type: 'String',
+                        description: '(Required) Provisioning Artifact Name'
+                    }
+                },
                 mainSteps: [
                     {
                         name: "EnableBase",
@@ -65,6 +87,14 @@ export class BootstrapBaseAutomation extends Construct {
                         inputs: {
                             Runtime: "python3.8",
                             Script: this.loadLambdaContent(path.join(__dirname, './runbook-handler/handler.py')),
+                            InputPayload:
+                                {
+                                    PortfolioId: '{{ PortfolioId }}',
+                                    PrincipalARN: '{{ PrincipalARN }}',
+                                    ProductName: '{{ ProductName }}',
+                                    ProvisionedProductName: '{{ ProvisionedProductName }}',
+                                    ProvisioningArtifactName: '{{ ProvisioningArtifactName }}'
+                                },
                             Handler: "handler.main"
                         },
                         isCritical: true,
