@@ -15,8 +15,12 @@ export type Context = {
 
 export function getContext(scope: Construct): Context {
     try {
-        return {
-            serviceAccount: scope.node.tryGetContext('serviceAccount')
+        const serviceAccount = scope.node.tryGetContext('service-account');
+        if (!serviceAccount) {
+            throw new Error('serviceAccount context variable is required');
+        }
+        return {            
+            serviceAccount
         }
     } catch (error) {
         console.error(error);

@@ -11,6 +11,9 @@ display_usage() {
 
 # Function to handle service account argument
 run_bootstrapping() {
+    service_account=$1
+    echo "Service account: $service_account"
+
     sudo npm install -g npm@latest
     npm config set cache $PWD/npm-cache
     npm install
@@ -20,7 +23,7 @@ run_bootstrapping() {
 
     echo "Bootstrapping $aws_account_id/$aws_region"
     npm run cdk:bootstrap $aws_account_id/$aws_region
-    npm run kcms:bootstrap
+    npm run kcms:bootstrap -- -context service-account=2233
 }
 
 # Check if no arguments were passed
