@@ -23,7 +23,7 @@ run_bootstrapping() {
 
     echo "Bootstrapping $aws_account_id/$aws_region"
     npm run cdk:bootstrap $aws_account_id/$aws_region
-    npm run kcms:bootstrap -- -context service-account=2233
+    npm run kcms:bootstrap -- --context service-account=2233
 }
 
 # Check if no arguments were passed
