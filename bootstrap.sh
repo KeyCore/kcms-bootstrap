@@ -23,7 +23,7 @@ run_bootstrapping() {
 
     echo "Bootstrapping $aws_account_id/$aws_region"
     npm run cdk:bootstrap $aws_account_id/$aws_region
-    npm run kcms:bootstrap -- --context service-account=2233
+    npm run kcms:bootstrap -- --context service-account=$service_account
 }
 
 # Check if no arguments were passed
@@ -32,19 +32,23 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
-
 # Loop over all arguments
-for arg in "$@"
-do
-    case $arg in
-        -s|--service-account)
-            run_bootstrapping
-            shift
-            ;;
-        *)
-            echo "Invalid option $arg"
-            display_usage
-            exit 1
-            ;;
-    esac
+while (( "$#" )); do
+  case "$1" in
+    -s|--service-account)
+      if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
+        run_bootstrapping "$2"
+        shift 2
+      else
+        echo "Error: Argument for $1 is missing" >&2
+        display_usage
+        exit 1
+      fi
+      ;;
+    *)
+      echo "Invalid option: $1" >&2
+      display_usage
+      exit 1
+      ;;
+  esac
 done
