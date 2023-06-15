@@ -4,7 +4,8 @@ import {
 } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { Context } from '../../context';
-import { BootstrapCoreAutomation } from './enable-core';
+import { BootstrapBaseAutomation } from './enable-core/service-catalog';
+import { AMSOnboardingRole } from './enable-core/ams-onboarding/ams_onboarding_role';
 
 export class KCMSBootstrapStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: cdk.StackProps, context: Context) {
@@ -20,6 +21,8 @@ export class KCMSBootstrapStack extends cdk.Stack {
                 iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess') // TODO - reduce permissions
             ]
         });
-        new BootstrapCoreAutomation(this, 'BootstrapCoreAutomation');
+
+        new BootstrapBaseAutomation(this, 'BootstrapBaseAutomation');
+        new AMSOnboardingRole(this, 'AMSOnboardingRole', {});
     }
 }

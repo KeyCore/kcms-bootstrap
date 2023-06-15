@@ -1,0 +1,204 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "AMS Onboarding Role stack (for Prod)",
+    "Parameters": {
+        "DateOfExpiry": {
+            "Type": "String",
+            "Description": "Enter the role expiry date (15 to 30 days from stack creation date) in the format: 2020-04-01T00:00:00Z"
+        }
+    },
+    "Conditions": {},
+    "Resources": {
+        "OnboardingRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "RoleName": "aws_managedservices_onboarding_role",
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::aws:policy/job-function/ViewOnlyAccess",
+                    "arn:aws:iam::aws:policy/SecurityAudit",
+                    "arn:aws:iam::aws:policy/AWSCloudShellFullAccess"
+                ],
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Action": "sts:AssumeRole",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "AWS": [
+                                    "328792436863"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "Policies": [
+                    {
+                        "PolicyName": "ams-managedservices-onboarding-policy",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "cloudformation:Describe*",
+                                        "cloudformation:EstimateTemplateCost",
+                                        "cloudformation:Get*",
+                                        "cloudformation:List*",
+                                        "cloudformation:ValidateTemplate",
+                                        "cloudformation:Detect*"
+                                    ],
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "cloudformation:CreateUploadBucket",
+                                        "cloudformation:CreateStack",
+                                        "s3:PutObject",
+                                        "s3:ListBucket",
+                                        "s3:GetObject",
+                                        "s3:CreateBucket"
+                                    ],
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "iam:CreateRole",
+                                        "iam:PutRolePolicy",
+                                        "iam:DeleteRolePolicy",
+                                        "iam:DeleteRole",
+                                        "iam:TagRole",
+                                        "iam:UntagRole"
+                                    ],
+                                    "Resource": [
+                                        {
+                                            "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/ams-*"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "iam:DeleteRolePolicy",
+                                        "iam:DeleteRole",
+                                        "iam:UntagRole"
+                                    ],
+                                    "Resource": [
+                                        {
+                                            "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/aws_managedservices_onboarding_role"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "iam:CreatePolicy",
+                                        "iam:DeletePolicy",
+                                        "iam:TagPolicy",
+                                        "iam:UntagPolicy"
+                                    ],
+                                    "Resource": [
+                                        {
+                                            "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:policy/ams-*"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "cloudformation:DeleteStack",
+                                        "cloudformation:UpdateStack"
+                                    ],
+                                    "Resource": [
+                                        {
+                                            "Fn::Sub": "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/ams-*"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Action": [
+                                        "dax:ListTables",
+                                        "ds:ListAuthorizedApplications",
+                                        "ds:DescribeRoles",
+                                        "ec2:GetEbsEncryptionByDefault",
+                                        "ecr:Describe*",
+                                        "support:Describe*",
+                                        "tag:GetTagKeys",
+                                        "lambda:GetFunction",
+                                        "apigateway:GET",
+                                        "glue:GetConnections",
+                                        "glue:SearchTables",
+                                        "cloudwatch:GetMetricData"
+                                    ],
+                                    "Resource": "*",
+                                    "Effect": "Allow",
+                                    "Sid": "AllowMoreReadForProwler"
+                                },
+                                {
+                                    "Sid": "ServiceLinkedRoleForS3Quota",
+                                    "Effect": "Allow",
+                                    "Action": "iam:CreateServiceLinkedRole",
+                                    "Resource": [
+                                        {
+                                            "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/aws-service-role/s3.amazonaws.com/*"
+                                        },
+                                        {
+                                            "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/aws-service-role/servicequotas.amazonaws.com/*"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "Sid": "ServiceQuotaConsoleAccess",
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "servicequotas:GetAWSDefaultServiceQuota",
+                                        "servicequotas:ListAWSDefaultServiceQuotas",
+                                        "servicequotas:ListServices",
+                                        "servicequotas:ListServiceQuotas",
+                                        "servicequotas:GetServiceQuota",
+                                        "servicequotas:ListRequestedServiceQuotaChangeHistory*"
+                                    ],
+                                    "Resource": "*"
+                                },
+                                {
+                                    "Sid": "ServiceQuotaForS3",
+                                    "Effect": "Allow",
+                                    "Action": "servicequotas:RequestServiceQuotaIncrease",
+                                    "Resource": "*",
+                                    "Condition": {
+                                        "ForAnyValue:StringEquals": {
+                                            "servicequotas:service": [
+                                                "s3",
+                                                "lambda"
+                                            ]
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "PolicyName": "ams-managedservices-time-restriction-policy",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Effect": "Deny",
+                                    "Action": "*",
+                                    "Resource": "*",
+                                    "Condition": {
+                                        "DateGreaterThan": {
+                                            "aws:CurrentTime": {"Ref" : "DateOfExpiry"}
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "DocumentName": "kcms-bootstrap-core",
+    "Parameters": {
+        "AutomationAssumeRole": ["arn:aws:iam::907826444281:role/KeyCoreOnboardingRole"],
+        "PortfolioId": ["port-plmopmcqbbglw"],
+        "ProductName": ["KeyCoreCore"],
+        "ProductVersion": ["0.0.0.0"],
+        "PrincipalArn": ["arn:aws:iam::907826444281:role/KeyCoreOnboardingRole"],
+        "ProvisionedProductName": ["KeyCoreCoreProduct"],
+        "ProvisioningArtifactName": ["0.0.0.1"],
+        "ServiceAccount": ["907174171861"]
+    }
+}
