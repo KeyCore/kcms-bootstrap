@@ -111,7 +111,7 @@ export class BootstrapBaseAutomation extends Construct {
                 value: 'kcms-enable-base',
             }],
             updateMethod: 'NewVersion',
-            versionName: '1.0.0'
+            versionName: '1.0.1'
         });
     }
 }
