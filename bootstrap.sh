@@ -24,7 +24,7 @@ run_bootstrapping() {
     echo "Bootstrapping $aws_account_id/$aws_region"
     npm run cdk:bootstrap $aws_account_id/$aws_region
     npm run synth -- --context service-account=$service_account
-    npm run kcms:deploy-bootstrap -- --context service-account=$service_account
+    npm run cdk deploy -- --require-approval never --context service-account=$service_account
 }
 
 # Check if no arguments were passed
