@@ -31,6 +31,7 @@ export class BootstrapBaseAutomation extends Construct {
                         'servicecatalog:SearchProvisionedProducts',
                         'servicecatalog:UpdateProvisionedProduct',
                         'servicecatalog:ProvisionProduct',
+                        'servicecatalog:DescribeProductAsAdmin',
                     ],
                     resources: ['*'],  // Modify as needed for more restricted access
                 }),
@@ -42,6 +43,13 @@ export class BootstrapBaseAutomation extends Construct {
                         'logs:PutLogEvents',
                     ],
                     resources: ['arn:aws:logs:*:*:*'],
+                }),
+                new iam.PolicyStatement({
+                    effect: iam.Effect.ALLOW,
+                    actions: [
+                        "iam:GetRole"
+                    ],
+                    resources: ['*'],
                 }),
             ]
         });
@@ -62,10 +70,6 @@ export class BootstrapBaseAutomation extends Construct {
                     PortfolioId: {
                         type: 'String',
                         description: '(Required) Portfolio Id',
-                    },
-                    PrincipalARN: {
-                        type: 'String',
-                        description: '(Required) Principal ARN'
                     },
                     ProductName: {
                         type: 'String',
@@ -90,12 +94,12 @@ export class BootstrapBaseAutomation extends Construct {
                             InputPayload:
                                 {
                                     PortfolioId: '{{ PortfolioId }}',
-                                    PrincipalARN: '{{ PrincipalARN }}',
+                                    PrincipalARN: executionRole.roleArn,
                                     ProductName: '{{ ProductName }}',
                                     ProvisionedProductName: '{{ ProvisionedProductName }}',
                                     ProvisioningArtifactName: '{{ ProvisioningArtifactName }}'
                                 },
-                            Handler: "handler.main"
+                            Handler: "main"
                         },
                         isCritical: true,
                         maxAttempts: 3,
@@ -111,7 +115,7 @@ export class BootstrapBaseAutomation extends Construct {
                 value: 'kcms-enable-base',
             }],
             updateMethod: 'NewVersion',
-            versionName: '1.0.1'
+            versionName: '1.0.5'
         });
     }
 }

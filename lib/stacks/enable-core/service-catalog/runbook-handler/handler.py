@@ -3,7 +3,7 @@ import boto3
 import time
 import uuid
 
-def main(event, _):
+def main(event, context):
     # Initialize boto3 client for servicecatalog
     servicecatalog = boto3.client('servicecatalog')
     
@@ -13,16 +13,12 @@ def main(event, _):
     # {
     #    "PortfolioId": "port-xxxxxxxxxxxxx",
     #    "PrincipalARN": "arn:aws:iam::xxxxxxxxxxxx:role/xxxxx",
-    #    "ProvisionedProductName": "MyProduct",
-    #    "ProductName": "MyProductName",
-    #    "ProvisioningArtifactName": "MyArtifactName"
+    #    "ProductId": "prod-xxxxxxxxxxxx"
     # }
 
     portfolio_id = event['PortfolioId']
     principal_arn = event['PrincipalARN']
-    provisioned_product_name = event['ProvisionedProductName']
-    product_name = event['ProductName']
-    provisioning_artifact_name = event['ProvisioningArtifactName']
+    product_id = event['ProductId']
     
     # Invoke accept_portfolio_share operation
     response_accept_portfolio = servicecatalog.accept_portfolio_share(
@@ -40,6 +36,17 @@ def main(event, _):
     # Pause for 5 seconds
     time.sleep(5)
 
+    # Invoke describe_product_as_admin operation to get SourceProvisioningArtifactId
+    response_describe_product_as_admin = servicecatalog.describe_product_as_admin(
+        Id=product_id
+    )
+    # Get the SourceProvisioningArtifactId and ProductName from the response
+    source_provisioning_artifact_id = response_describe_product_as_admin['ProvisioningArtifactSummaries'][0]['Id']
+    product_name = response_describe_product_as_admin['Name']
+    
+    # Generate the ProvisionedProductName
+    provisioned_product_name = product_name + '_provisioned'
+
     # Invoke search_provisioned_products operation
     response_search_provisioned_products = servicecatalog.search_provisioned_products(
         Filters={
@@ -52,18 +59,18 @@ def main(event, _):
         # Product found, update it
         response_update_provisioned_product = servicecatalog.update_provisioned_product(
             UpdateToken=str(uuid.uuid4()),
-            ProductName=product_name,
+            Id=product_id,
             ProvisionedProductName=provisioned_product_name,
-            ProvisioningArtifactName=provisioning_artifact_name
+            ProvisioningArtifactId=source_provisioning_artifact_id
         )
         response_provision_product = {}
     else:
         # Product not found, provision a new one
         response_provision_product = servicecatalog.provision_product(
             ProvisionToken=str(uuid.uuid4()),
-            ProductName=product_name,
+            ProductId=product_id,
             ProvisionedProductName=provisioned_product_name,
-            ProvisioningArtifactName=provisioning_artifact_name
+            ProvisioningArtifactId=source_provisioning_artifact_id
         )
         response_update_provisioned_product = {}
 
@@ -73,6 +80,7 @@ def main(event, _):
         'body': {
             'response_accept_portfolio': json.dumps(response_accept_portfolio),
             'response_associate_principal': json.dumps(response_associate_principal),
+            'response_describe_product_as_admin': json.dumps(response_describe_product_as_admin),
             'response_search_provisioned_products': json.dumps(response_search_provisioned_products),
             'response_update_provisioned_product': json.dumps(response_update_provisioned_product),
             'response_provision_product': json.dumps(response_provision_product)

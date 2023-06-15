@@ -7,10 +7,14 @@ import { Context } from '../../context';
 import { BootstrapBaseAutomation } from './enable-core/service-catalog';
 import { AMSOnboardingRole } from './enable-core/ams-onboarding/ams_onboarding_role';
 
-export class KCMSBootstrapStack extends cdk.Stack {
-    constructor(scope: Construct, id: string, props: cdk.StackProps, context: Context) {
-        super(scope, id, props);
+interface KCMSBootstrapStackProps extends cdk.StackProps {
+    context: Context;
+}
 
+export class KCMSBootstrapStack extends cdk.Stack {
+    constructor(scope: Construct, id: string, props: KCMSBootstrapStackProps) {
+        super(scope, id, props);
+        const { context } = props;
         new iam.Role(this, 'KeyCoreOnboardingRole', {
             assumedBy: new iam.CompositePrincipal(
                 new iam.AccountPrincipal(context.serviceAccount),
