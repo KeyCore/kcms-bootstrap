@@ -40,9 +40,11 @@ def main(event, context):
     response_describe_product_as_admin = servicecatalog.describe_product_as_admin(
         Id=product_id
     )
+    print(response_describe_product_as_admin)
+
     # Get the SourceProvisioningArtifactId and ProductName from the response
     source_provisioning_artifact_id = response_describe_product_as_admin['ProvisioningArtifactSummaries'][0]['Id']
-    product_name = response_describe_product_as_admin['Name']
+    product_name = response_describe_product_as_admin['ProductViewDetail']['ProductViewSummary']['Name']
     
     # Generate the ProvisionedProductName
     provisioned_product_name = product_name + '_provisioned'
@@ -53,13 +55,13 @@ def main(event, context):
             'SearchQuery': [f"name:{provisioned_product_name}"]
         }
     )
-    
+    print("response_search_provisioned_products", response_search_provisioned_products)
     # Depending on the search result, either update or provision a product
     if response_search_provisioned_products['TotalResultsCount'] > 0:
         # Product found, update it
         response_update_provisioned_product = servicecatalog.update_provisioned_product(
             UpdateToken=str(uuid.uuid4()),
-            Id=product_id,
+            ProductId=product_id,
             ProvisionedProductName=provisioned_product_name,
             ProvisioningArtifactId=source_provisioning_artifact_id
         )
@@ -78,11 +80,6 @@ def main(event, context):
     return {
         'statusCode': 200,
         'body': {
-            'response_accept_portfolio': json.dumps(response_accept_portfolio),
-            'response_associate_principal': json.dumps(response_associate_principal),
-            'response_describe_product_as_admin': json.dumps(response_describe_product_as_admin),
-            'response_search_provisioned_products': json.dumps(response_search_provisioned_products),
-            'response_update_provisioned_product': json.dumps(response_update_provisioned_product),
-            'response_provision_product': json.dumps(response_provision_product)
+            "statue": "success",
         }
     }

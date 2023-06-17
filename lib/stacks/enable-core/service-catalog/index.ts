@@ -18,7 +18,6 @@ export class BootstrapBaseAutomation extends Construct {
     constructor(scope: Construct, id: string) {
         super(scope, id);
 
-
         // Define a managed policy granting the necessary permissions for the handler
         const executionPolicy = new iam.ManagedPolicy(this, 'ExecutionPolicy', {
             managedPolicyName: 'KCMS-BootstrapBaseAutomation',
@@ -40,17 +39,54 @@ export class BootstrapBaseAutomation extends Construct {
                     actions: [
                         'logs:CreateLogGroup',
                         'logs:CreateLogStream',
-                        'logs:PutLogEvents',
+                        'logs:PutLogEvents'
                     ],
                     resources: ['arn:aws:logs:*:*:*'],
                 }),
                 new iam.PolicyStatement({
+                    sid: "Cloudformation",
                     effect: iam.Effect.ALLOW,
                     actions: [
-                        "iam:GetRole"
+                        "cloudformation:DescribeStackResource",
+                        "cloudformation:DescribeStackResources",
+                        "cloudformation:GetTemplate",
+                        "cloudformation:List*",
+                        "cloudformation:DescribeStackEvents",
+                        "cloudformation:DescribeStacks",
+                        "cloudformation:CreateStack",
+                        "cloudformation:DeleteStack",
+                        "cloudformation:DescribeStackEvents",
+                        "cloudformation:DescribeStacks",
+                        "cloudformation:GetTemplateSummary",
+                        "cloudformation:SetStackPolicy",
+                        "cloudformation:ValidateTemplate",
+                        "cloudformation:UpdateStack",
+                        "cloudformation:CreateChangeSet",
+                        "cloudformation:DescribeChangeSet",
+                        "cloudformation:ExecuteChangeSet",
+                        "cloudformation:DeleteChangeSet"
+                    ],
+                    resources: ["*"]
+                }),
+                new iam.PolicyStatement({
+                    effect: iam.Effect.ALLOW,
+                    actions: [
+                        "iam:GetRole",
+                        "iam:CreateRole",
+                        "iam:TagRole",
+                        "iam:CreatePolicy"
                     ],
                     resources: ['*'],
                 }),
+                new iam.PolicyStatement({
+                    effect: iam.Effect.ALLOW,
+                    actions: [
+                        "s3:GetObject",
+                        "s3:ListBucket",
+                        "s3:CreateBucket"
+                    ],
+                    resources: ['*'],
+                }),                
             ]
         });
 
@@ -58,7 +94,9 @@ export class BootstrapBaseAutomation extends Construct {
         const executionRole = new iam.Role(this, 'ExecutionRole', {
             roleName: 'KCMS-BootstrapBaseAutomation',
             assumedBy: new iam.ServicePrincipal('ssm.amazonaws.com'),
-            managedPolicies: [executionPolicy]
+            managedPolicies: [
+                iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess') // TODO - reduce permissions
+            ]
         });
 
         new ssm.CfnDocument(this, 'Document', {
@@ -71,17 +109,9 @@ export class BootstrapBaseAutomation extends Construct {
                         type: 'String',
                         description: '(Required) Portfolio Id',
                     },
-                    ProductName: {
+                    ProductId: {
                         type: 'String',
-                        description: '(Required) Product Name'
-                    },
-                    ProvisionedProductName: {
-                        type: 'String',
-                        description: '(Required) Provisioned Product Name'
-                    },
-                    ProvisioningArtifactName: {
-                        type: 'String',
-                        description: '(Required) Provisioning Artifact Name'
+                        description: '(Required) Product Id',
                     }
                 },
                 mainSteps: [
@@ -95,14 +125,12 @@ export class BootstrapBaseAutomation extends Construct {
                                 {
                                     PortfolioId: '{{ PortfolioId }}',
                                     PrincipalARN: executionRole.roleArn,
-                                    ProductName: '{{ ProductName }}',
-                                    ProvisionedProductName: '{{ ProvisionedProductName }}',
-                                    ProvisioningArtifactName: '{{ ProvisioningArtifactName }}'
+                                    ProductId: '{{ ProductId }}'
                                 },
                             Handler: "main"
                         },
                         isCritical: true,
-                        maxAttempts: 3,
+                        maxAttempts: 1,
                         timeoutSeconds: 600
                     }
                 ]
@@ -115,7 +143,7 @@ export class BootstrapBaseAutomation extends Construct {
                 value: 'kcms-enable-base',
             }],
             updateMethod: 'NewVersion',
-            versionName: '1.0.5'
+            versionName: '1.0.13'
         });
     }
 }
