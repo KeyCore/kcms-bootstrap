@@ -1,6 +1,6 @@
-# Welcome to your CDK TypeScript project!
+# KeyCore Managed Services Bootstrap helper
 
-Get Customer account credentials
+To bootstrap an account, simply clone this repository and execute the boostrap.sh script.
 
-CDK bootstrap
-`yarn boostrap`
+The script takes a --service-account argument, this has tp be the keycore service account number.
+This account id will be provided during the onboarding process
