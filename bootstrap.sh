@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#!/bin/bash
+set -e
 
 # Function to display usage
 display_usage() {
@@ -14,8 +14,6 @@ run_bootstrapping() {
     service_account=$1
     echo "Service account: $service_account"
 
-    sudo npm install -g npm@latest
-    npm config set cache $PWD/npm-cache
     npm install
 
     aws_account_id=$(aws sts get-caller-identity --query Account --output text)
