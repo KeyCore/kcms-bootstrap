@@ -8,6 +8,9 @@ inputs:
   build_version:
     description: Build version
     required: true
+  guthub_token:
+    description: The github token from secrets.GITHUB_TOKEN
+    required: true
 
 runs:
   using: composite
@@ -27,7 +30,7 @@ runs:
       id: create_release
       uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_TOKEN: ${{ inputs.guthub_token }}
       with:
         tag_name: ${{ inputs.build_version }}
         release_name: v${{ inputs.build_version }}
@@ -37,7 +40,7 @@ runs:
     - name: Upload release assets
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_TOKEN: ${{ inputs.guthub_token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./release.zip

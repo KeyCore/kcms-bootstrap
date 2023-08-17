@@ -5,11 +5,17 @@ on:
     branches:
       - main
 
+env:
+    BUILD_VERSION: "v1.0.${{github.run_number}}"
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: build
         uses: "./.github/template/build"
+        with:
+            project-name: kcms-bootstrap
+            build_version: ${{ env.BUILD_VERSION }}
+            guthub_token: ${{ secrets.GITHUB_TOKEN }}
