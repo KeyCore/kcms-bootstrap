@@ -11,7 +11,8 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - name: echo
+      - name: Download assets
+        id: download_assets
         run: |
           mkdir release-assets
           
@@ -30,4 +31,10 @@ jobs:
           echo XXXXXXXXXXXXXXXXXXXXXXXXXXX
           ls -la release-assets
 
+        shell: bash
+
+      - name: Deploy to production
+        id: deploy_to_production
+        run: |
+          echo "Deploying ${{ github.event.release.name }} to production"
         shell: bash

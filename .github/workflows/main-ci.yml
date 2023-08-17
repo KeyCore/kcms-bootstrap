@@ -6,16 +6,41 @@ on:
       - main
 
 env:
-    BUILD_VERSION: "1.0.${{github.run_number}}"
+  BUILD_VERSION: "1.0.${{github.run_number}}"
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
-      - name: build
-        uses: "./.github/template/build"
-        with:
-            project-name: kcms-bootstrap
-            build_version: ${{ env.BUILD_VERSION }}
-            guthub_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: build_version
+        run: echo ${{ env.BUILD_VERSION }}
+        shell: bash
+
+      - id: build
+        name: build_release
+        shell: bash
+        run: |
+          npm install
+          npm run synth -- --context service-account=111111111111
+
+      - name: Package release asset
+        id: package_release
+        shell: bash
+        run: |
+          zip -r release.zip ./cdk.out
+
+      - name: Create github release
+        id: create_release
+        run: |
+          ls -la
+        shell: bash
+
+
+      - name: Deploy to test
+        id: deploy_to_test
+        run: |
+          echo "Deploying ${{ env.BUILD_VERSION }} to test"
+        shell: bash
