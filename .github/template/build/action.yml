@@ -20,12 +20,18 @@ runs:
       shell: bash
 
     - id: build
-      name: Build
+      name: build_release
       shell: bash
       run: |
         npm install
         npm run synth -- --context service-account=111111111111
 
+    - name: Package release asset
+      id: package_release
+      shell: bash
+      run: |
+        zip -r release.zip ./cdk.out
+        
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -38,6 +44,7 @@ runs:
         prerelease: true
 
     - name: Upload release assets
+      id: upload_release
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ inputs.guthub_token }}
