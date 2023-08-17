@@ -26,7 +26,6 @@ jobs:
           echo "Unzip assets"
           unzip -q 'release-assets/*.zip' -d release-assets/  
         
-      - 
       - name: Deploy to production
         id: deploy_to_production
         shell: bash
