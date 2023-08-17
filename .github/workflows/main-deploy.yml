@@ -22,14 +22,9 @@ jobs:
           echo Downloading release source code
           gh release --repo ${{ github.repository }} download -D release-assets -A zip ${{ github.event.release.tag_name }}
           
-          echo XXXXXXXXXXXXXXXXXXXXXXXXXXX
-          ls -la release-assets/ 
-
+          echo "Unzip assets"          
           unzip release-assets/cdk.out.zip -d release-assets/
           unzip release-assets/${{ github.event.repository.name }}-${{ github.event.release.tag_name }}.zip  -d release-assets/
-
-          echo XXXXXXXXXXXXXXXXXXXXXXXXXXX
-          ls -la release-assets
         shell: bash
 
       - name: Deploy to production
