@@ -53,7 +53,8 @@ jobs:
 
           echo Downloading release source code
           gh release --repo ${{ github.repository }} download -D release-assets -A zip ${{ env.BUILD_VERSION }}
-
+          
+          echo "Unzip assets"
           unzip -q release-assets/*.zip -d release-assets/
         shell: bash
 
