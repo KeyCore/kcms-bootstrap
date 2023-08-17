@@ -18,7 +18,7 @@ jobs:
           # Download assets
           gh release --repo ${{ github.repository }} download -D release-assets ${{ github.event.release.name }}
           # Download Source code
-          gh release --repo ${{ github.repository }} download -O release-assets/source.zip -A ${{ github.event.release.name }}
+          gh release --repo ${{ github.repository }} download -O release-assets/source.zip -A zip ${{ github.event.release.name }}
           
           echo XXXXXXXXXXXXXXXXXXXXXXXXXXX
           ls -la release-assets/ 
