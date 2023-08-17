@@ -36,7 +36,7 @@ jobs:
       - name: Create github release
         id: create_release
         run: |
-          gh release --repo ${{ github.repository }} create -d ${{ env.BUILD_VERSION }} cdk.out.zip
+          gh release --repo ${{ github.repository }} create -p ${{ env.BUILD_VERSION }} cdk.out.zip
         shell: bash
 
   deploy_test:
@@ -59,8 +59,8 @@ jobs:
           unzip -q 'release-assets/*.zip' -d release-assets/
         
 
-      - name: Deploy to test
-        id: deploy_to_test
+      - name: Deploy to dev
+        id: deploy_to_dev
         shell: bash
         run: |
-          echo "Deploying ${{ env.BUILD_VERSION }} to test"
+          echo "Deploying ${{ env.BUILD_VERSION }} to dev"

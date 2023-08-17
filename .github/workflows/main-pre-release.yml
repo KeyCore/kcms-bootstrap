@@ -2,7 +2,7 @@ name: main-deploy
 
 on:
   release:
-    types: [prereleased]
+    types: [released]
 
 jobs:
   build:
@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: deploy_to_test
         uses: "./.github/template/deploy"
         with:
