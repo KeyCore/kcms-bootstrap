@@ -13,9 +13,9 @@ jobs:
     steps:
       - name: echo
         run: |
-          mkdir assets
-          gh release --repo ${{ github.repository }} download -D assets -O release.zip -A zip
-          unzip assets/release.zip -d assets/
-          ls -la assets
-          
+          mkdir release-assets
+          gh release --repo ${{ github.repository }} download -O release-assets/release.zip -A zip
+          unzip release-assets/release.zip -d assets/
+          ls -la release-assets
+
         shell: bash
