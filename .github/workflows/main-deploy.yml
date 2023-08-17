@@ -15,9 +15,9 @@ jobs:
         run: |
           mkdir release-assets          
           gh release --repo ${{ github.repository }} download -D release-assets ${{ github.event.release.name }}
+          echo "DDDDDDDDD"
           ls -l release-assets
-
-          unzip release-assets/release.zip -d assets/
+          unzip release-assets/cdk.out.zip -d release-assets/
           ls -la release-assets
 
         shell: bash
