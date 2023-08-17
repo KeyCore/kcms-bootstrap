@@ -51,5 +51,5 @@ runs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./release.zip
-        asset_name: .${{ inputs.project-name }}-build.${{ inputs.build_version }}.zip
+        asset_name: cdk.out.${{ inputs.build_version }}.zip
         asset_content_type: application/zip
