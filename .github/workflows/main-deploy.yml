@@ -13,8 +13,10 @@ jobs:
     steps:
       - name: echo
         run: |
-          mkdir release-assets
-          gh release --repo ${{ github.repository }} download -O release-assets/release.zip -A zip
+          mkdir release-assets          
+          gh release --repo ${{ github.repository }} download -D release-assets ${{ github.event.release.name }}
+          ls -l release-assets
+
           unzip release-assets/release.zip -d assets/
           ls -la release-assets
 
