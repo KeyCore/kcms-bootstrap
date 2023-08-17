@@ -14,8 +14,8 @@ jobs:
       - name: echo
         run: |
           mkdir assets
-          gh release --repo ${{ github.repository }} download -D assets -A zip
-          echo ${{ github.event.repository.name }}          
-          echo ${{ github.event.release.name }}
-          ls -la assets/${{ github.event.repository.name }}-${{ github.event.release.name }}.zip
+          gh release --repo ${{ github.repository }} download -D assets -O release.zip -A zip
+          unzip assets/release.zip -d assets/
+          ls -la assets
+          
         shell: bash
