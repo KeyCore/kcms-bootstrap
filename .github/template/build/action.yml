@@ -39,7 +39,7 @@ runs:
         GITHUB_TOKEN: ${{ inputs.guthub_token }}
       with:
         tag_name: ${{ inputs.build_version }}
-        release_name: v${{ inputs.build_version }}
+        release_name: ${{ inputs.build_version }}
         draft: false
         prerelease: true
 
