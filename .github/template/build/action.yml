@@ -13,7 +13,7 @@ runs:
   using: composite
   steps:
     - name: BUILD_VERSION
-      run: echo ${{ input.build_version }}
+      run: echo ${{ inputs.build_version }}
       shell: bash
 
     - id: build
@@ -29,8 +29,8 @@ runs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ input.build_version }}
-        release_name: v${{ input.build_version }}
+        tag_name: ${{ inputs.build_version }}
+        release_name: v${{ inputs.build_version }}
         draft: false
         prerelease: true
 
@@ -41,5 +41,5 @@ runs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./release.zip
-        asset_name: .${{ input.project-name }}-build.${{ input.build_version }}.zip
+        asset_name: .${{ inputs.project-name }}-build.${{ inputs.build_version }}.zip
         asset_content_type: application/zip
