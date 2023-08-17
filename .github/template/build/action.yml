@@ -1,0 +1,45 @@
+name: build
+description:  "Build and Create a release"
+
+inputs:
+  project-name:
+    description: 'Name of the project'
+    required: true
+  build_version:
+    description: Build version
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: BUILD_VERSION
+      run: echo ${{ input.build_version }}
+      shell: bash
+
+    - id: build
+      name: Build
+      shell: bash
+      run: |
+        npm install
+        npm run synth
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ input.build_version }}
+        release_name: v${{ input.build_version }}
+        draft: false
+        prerelease: true
+
+    - name: Upload release assets
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./release.zip
+        asset_name: .${{ input.project-name }}-build.${{ input.build_version }}.zip
+        asset_content_type: application/zip
