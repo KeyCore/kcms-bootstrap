@@ -30,7 +30,6 @@ jobs:
 
           echo XXXXXXXXXXXXXXXXXXXXXXXXXXX
           ls -la release-assets
-
         shell: bash
 
       - name: Deploy to production
