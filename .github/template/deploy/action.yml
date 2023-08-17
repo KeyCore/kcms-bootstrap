@@ -1,0 +1,36 @@
+name: deploy
+description:  Deploy a release
+
+inputs:
+  environment:
+    description: Name of the environment
+    required: true
+  release_version:
+    description: The release version
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Download assets
+      id: download_assets
+      shell: bash
+      run: |
+        mkdir release-assets
+        
+        echo Downloading release assets
+        gh release --repo ${{ github.repository }} download -D release-assets  ${{ inputs.release_version }}
+
+        echo Downloading release source code
+        gh release --repo ${{ github.repository }} download -D release-assets -A zip ${{ inputs.release_version }}
+        
+        echo "Unzip assets"
+        unzip -q 'release-assets/*.zip' -d release-assets/  
+      
+
+    - name: Deploy to production
+      id: deploy_to_${{ inputs.environment }}
+      shell: bash
+      run: |
+        echo "Deploying ${{ inputs.release_version }} to ${{ inputs.environment }}"
+      
