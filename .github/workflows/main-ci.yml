@@ -15,12 +15,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: build_version
+      - name: Build version
+        id: build_version
         run: echo ${{ env.BUILD_VERSION }}
         shell: bash
 
       - id: build
-        name: build_release
+        name: build
         shell: bash
         run: |
           npm install
@@ -35,7 +36,7 @@ jobs:
       - name: Create github release
         id: create_release
         run: |
-          gh release --repo ${{ github.repository }} create -d ${{ env.BUILD_VERSION }} 'cdk.out.zip'
+          gh release --repo ${{ github.repository }} create -p ${{ env.BUILD_VERSION }} 'cdk.out.zip'
         shell: bash
 
 
