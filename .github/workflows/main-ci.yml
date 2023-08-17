@@ -30,12 +30,12 @@ jobs:
         id: package_release
         shell: bash
         run: |
-          zip -r release.zip ./cdk.out
+          zip -r cdk.out.zip ./cdk.out
 
       - name: Create github release
         id: create_release
         run: |
-          ls -la
+          gh release --repo ${{ github.repository }} create -d ${{ env.BUILD_VERSION }} 'cdk.out.zip'
         shell: bash
 
 
