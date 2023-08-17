@@ -21,7 +21,7 @@ jobs:
         shell: bash
 
       - id: build
-        name: build
+        name: Build and synthisize cdk app
         shell: bash
         run: |
           npm install
@@ -53,15 +53,8 @@ jobs:
 
           echo Downloading release source code
           gh release --repo ${{ github.repository }} download -D release-assets -A zip ${{ env.BUILD_VERSION }}
-          
-          echo XXXXXXXXXXXXXXXXXXXXXXXXXXX
-          ls -la release-assets/ 
 
-          unzip release-assets/cdk.out.zip -d release-assets/
-          unzip release-assets/${{ github.event.repository.name }}-${{ env.BUILD_VERSION }}.zip  -d release-assets/
-
-          echo XXXXXXXXXXXXXXXXXXXXXXXXXXX
-          ls -la release-assets
+          unzip -q release-assets/*.zip -d release-assets/
         shell: bash
 
       - name: Deploy to test
