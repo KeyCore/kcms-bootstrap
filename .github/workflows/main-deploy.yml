@@ -9,5 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: echo
-        run: echo ${{ github.event.release.upload_url }}
+        run: | 
+          echo ${{ github.event.release.upload_url }}
+          curl ${{ github.event.release.upload_url }}
+          wget ${{ github.event.release.upload_url }}
         shell: bash
