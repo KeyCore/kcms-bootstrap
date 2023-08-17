@@ -13,6 +13,7 @@ jobs:
     steps:
       - name: Download assets
         id: download_assets
+        shell: bash
         run: |
           mkdir release-assets
           
@@ -22,13 +23,13 @@ jobs:
           echo Downloading release source code
           gh release --repo ${{ github.repository }} download -D release-assets -A zip ${{ github.event.release.tag_name }}
           
-          echo "Unzip assets"          
-          unzip release-assets/cdk.out.zip -d release-assets/
-          unzip release-assets/${{ github.event.repository.name }}-${{ github.event.release.tag_name }}.zip  -d release-assets/
-        shell: bash
+          echo "Unzip assets"
+          unzip -q 'release-assets/*.zip' -d release-assets/  
+        
 
       - name: Deploy to production
         id: deploy_to_production
+        shell: bash
         run: |
           echo "Deploying ${{ github.event.release.tag_name }} to production"
-        shell: bash
+        
