@@ -54,8 +54,10 @@ jobs:
           echo Downloading release source code
           gh release --repo ${{ github.repository }} download -D release-assets -A zip ${{ env.BUILD_VERSION }}
           
+          ls -l release-assets/*.zip
+
           echo "Unzip assets"
-          unzip -q release-assets/*.zip -d release-assets/
+          unzip 'release-assets/*.zip' -d release-assets/
         shell: bash
 
       - name: Deploy to test
