@@ -24,7 +24,7 @@ runs:
       shell: bash
       run: |
         npm install
-        npm run synth
+        npm run synth -- --context service-account=111111111111
 
     - name: Create Release
       id: create_release
