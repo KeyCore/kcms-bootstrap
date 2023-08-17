@@ -36,7 +36,7 @@ jobs:
       - name: Create github release
         id: create_release
         run: |
-          gh release --repo ${{ github.repository }} create -p ${{ env.BUILD_VERSION }} 'cdk.out.zip'
+          gh release --repo ${{ github.repository }} create -p ${{ env.BUILD_VERSION }} cdk.out.zip
         shell: bash
 
 
