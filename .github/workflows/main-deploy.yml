@@ -4,9 +4,12 @@ on:
   release:
     types: [released]
 
-jobs:
+jobs:  
   build:
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
       - name: echo
         run: | 
