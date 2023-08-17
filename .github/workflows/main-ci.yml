@@ -36,15 +36,31 @@ jobs:
       - name: Create github release
         id: create_release
         run: |
-          gh release --repo ${{ github.repository }} create -p ${{ env.BUILD_VERSION }} cdk.out.zip
+          gh release --repo ${{ github.repository }} create -d ${{ env.BUILD_VERSION }} cdk.out.zip
         shell: bash
 
   deploy_test:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: deploy_to_production
-        uses: "./.github/template/deploy"
-        with:
-          environment: production
-          release-version:  ${{ env.BUILD_VERSION }}
+      - name: Download assets
+        id: download_assets
+        shell: bash
+        run: |
+          mkdir release-assets
+          
+          echo Downloading release assets
+          gh release --repo ${{ github.repository }} download -D release-assets ${{ env.BUILD_VERSION }}
+
+          echo Downloading release source code
+          gh release --repo ${{ github.repository }} download -D release-assets -A zip ${{ env.BUILD_VERSION }}
+
+          echo "Unzip assets"
+          unzip -q 'release-assets/*.zip' -d release-assets/
+        
+
+      - name: Deploy to test
+        id: deploy_to_test
+        shell: bash
+        run: |
+          echo "Deploying ${{ env.BUILD_VERSION }} to test"

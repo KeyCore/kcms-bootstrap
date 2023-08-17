@@ -2,7 +2,7 @@ name: main-deploy
 
 on:
   release:
-    types: [released]
+    types: [prereleased]
 
 jobs:
   build:
@@ -11,8 +11,10 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - name: deploy_to_production
+      - uses: actions/checkout@v3
+      
+      - name: deploy_to_test
         uses: "./.github/template/deploy"
         with:
-          environment: production
+          environment: test
           release-version:  ${{ github.event.release.tag_name }}
