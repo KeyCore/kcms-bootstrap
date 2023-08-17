@@ -13,11 +13,20 @@ jobs:
     steps:
       - name: echo
         run: |
-          mkdir release-assets          
+          mkdir release-assets
+          
+          # Download assets
           gh release --repo ${{ github.repository }} download -D release-assets ${{ github.event.release.name }}
-          echo "DDDDDDDDD"
-          ls -l release-assets
+          # Download Source code
+          gh release --repo ${{ github.repository }} download -O release-assets/source.zip -A ${{ github.event.release.name }}
+          
+          echo XXXXXXXXXXXXXXXXXXXXXXXXXXX
+          ls -la release-assets/ 
+
           unzip release-assets/cdk.out.zip -d release-assets/
+          unzip release-assets/source.zip  -d release-assets/
+
+          echo XXXXXXXXXXXXXXXXXXXXXXXXXXX
           ls -la release-assets
 
         shell: bash
