@@ -4,7 +4,7 @@ on:
   release:
     types: [released]
 
-jobs:  
+jobs:
   build:
     runs-on: ubuntu-latest
     env:
@@ -12,12 +12,10 @@ jobs:
 
     steps:
       - name: echo
-        run: | 
-          echo "XXXXXXXXXXXXXXXX"
-          echo ${{ github.repository }}
-          echo "XXXXXXXXXXXXXXXX"
+        run: |
           mkdir assets
-          REPO="KeyCore/kcms-bootstrap"
-          gh release --repo ${REPO} download -D assets -A zip
-          ls -la assets
+          gh release --repo ${{ github.repository }} download -D assets -A zip
+          echo ${{ github.event.repository.name }}          
+          echo ${{ github.event.release.name }}
+          ls -la assets/${{ github.event.repository.name }}-${{ github.event.release.name }}.zip
         shell: bash
