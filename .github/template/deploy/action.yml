@@ -21,13 +21,11 @@ runs:
         
         echo Downloading release assets
         # gh release --repo ${{ github.repository }} download -D release-assets  ${{ inputs.release_version }}
-
         gh release --repo ${{ github.repository }} download -O cdk.out.zip  ${{ inputs.release_version }}
-        
-
-        echo "Unzip assets"
+        echo "Unzipping asset cdk.out.zip"
         # unzip -q 'release-assets/*.zip' -d release-assets/  
         unzip -q cdk.out.zip
+        ls -la 
 
     - name: Deploy to production
       id: deploy
