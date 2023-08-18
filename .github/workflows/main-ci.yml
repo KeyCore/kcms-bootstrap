@@ -32,11 +32,12 @@ jobs:
         shell: bash
         run: |
           zip -r cdk.out.zip ./cdk.out
+          zip -r github-actions.zip ./.github
 
       - name: Create github release
         id: create_release
         run: |
-          gh release --repo ${{ github.repository }} create -p ${{ env.BUILD_VERSION }} cdk.out.zip
+          gh release --repo ${{ github.repository }} create -p ${{ env.BUILD_VERSION }} cdk.out.zip github-actions.zip
         shell: bash
 
   deploy_test:
