@@ -12,8 +12,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: actions/checkout@v3
-
     - name: Download assets
       id: download_assets
       shell: bash
@@ -32,7 +30,7 @@ runs:
       
 
     - name: Deploy to production
-      id: deploy_to_${{ inputs.environment }}
+      id: deploy
       shell: bash
       run: |
         echo "Deploying ${{ inputs.release_version }} to ${{ inputs.environment }}"
