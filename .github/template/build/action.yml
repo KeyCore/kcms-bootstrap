@@ -36,7 +36,8 @@ runs:
       id: create_release
       run: |
         echo "Creating release ${{ inputs.release_version }}"
-        gh release --repo ${{ github.repository }} create -p -t "Release version: ${{ inputs.release_version }}"
+        gh release --repo ${{ github.repository }} create -p -t "Release version: ${{ inputs.release_version }}" ${{ inputs.release_version }}
+
         echo "Uploading assets to release ${{ inputs.release_version }}"
         gh release --repo ${{ github.repository }} upload ${{ inputs.release_version }} cdk.out.zip
       shell: bash
