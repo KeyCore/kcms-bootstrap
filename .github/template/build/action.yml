@@ -35,5 +35,5 @@ runs:
     - name: Create github release
       id: create_release
       run: |
-        gh release --repo ${{ github.repository }} create -p -t "Release of version ${{ inputs.release_version }}" ${{ inputs.release_version }} cdk.out.zip
+        gh release --repo ${{ github.repository }} create -p -t "Release version: ${{ inputs.release_version }}" ${{ inputs.release_version }} cdk.out.zip
       shell: bash
