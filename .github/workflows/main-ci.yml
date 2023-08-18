@@ -12,33 +12,12 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
+    steps:    
       - uses: actions/checkout@v3
 
-      - name: Build version
-        id: build_version
-        run: echo ${{ env.BUILD_VERSION }}
-        shell: bash
-
-      - id: build
-        name: Build and synthisize cdk app
-        shell: bash
-        run: |
-          npm install
-          npm run synth -- --context service-account=111111111111
-
-      - name: Package release asset
-        id: package_release
-        shell: bash
-        run: |
-          zip -r cdk.out.zip ./cdk.out
-          zip -r github-actions.zip ./.github
-
-      - name: Create github release
-        id: create_release
-        run: |
-          gh release --repo ${{ github.repository }} create -p ${{ env.BUILD_VERSION }} cdk.out.zip github-actions.zip
-        shell: bash
+      - uses: "./.github/template/build"
+        with:
+          release_version: ${{ env.BUILD_VERSION }}
 
   deploy_test:
     runs-on: ubuntu-latest

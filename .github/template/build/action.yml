@@ -2,25 +2,22 @@ name: build
 description:  "Build and Create a release"
 
 inputs:
-  project-name:
-    description: 'Name of the project'
-    required: true
-  build_version:
+  release_version:
     description: Build version
     required: true
-  guthub_token:
-    description: The github token from secrets.GITHUB_TOKEN
-    required: true
+
 
 runs:
   using: composite
   steps:
-    - name: BUILD_VERSION
-      run: echo ${{ inputs.build_version }}
+  
+    - name: Build version
+      id: build_version
+      run: echo ${{ inputs.release_version }}
       shell: bash
 
     - id: build
-      name: build_release
+      name: Build and synthisize cdk app
       shell: bash
       run: |
         npm install
@@ -30,26 +27,10 @@ runs:
       id: package_release
       shell: bash
       run: |
-        zip -r release.zip ./cdk.out
-        
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ inputs.guthub_token }}
-      with:
-        tag_name: ${{ inputs.build_version }}
-        release_name: ${{ inputs.build_version }}
-        draft: false
-        prerelease: true
+        zip -r cdk.out.zip ./cdk.out
 
-    - name: Upload release assets
-      id: upload_release
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ inputs.guthub_token }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./release.zip
-        asset_name: cdk.out.zip
-        asset_content_type: application/zip
+    - name: Create github release
+      id: create_release
+      run: |
+        gh release --repo ${{ github.repository }} create -p ${{ inputs.release_version }} cdk.out.zip
+      shell: bash
