@@ -15,7 +15,8 @@ jobs:
     steps:    
       - uses: actions/checkout@v3
 
-      - uses: "./.github/template/build"
+      - name: Build and package
+        uses: "./.github/template/build"
         with:
           release_version: ${{ env.BUILD_VERSION }}
 
