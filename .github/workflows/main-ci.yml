@@ -21,7 +21,7 @@ jobs:
           release_version: ${{ env.BUILD_VERSION }}
       - run: echo Run unit test suite a
       - run: echo Run unit test suite b
-      - run: echo Run unit test suite c
+      - run: echo Run unit test suite cdddd
 
 
   deploy_dev:
