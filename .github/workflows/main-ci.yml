@@ -27,7 +27,7 @@ jobs:
   deploy_dev:
     runs-on: ubuntu-latest
     environment: dev
-    needs: build
+    needs: build_and_unit_test
     steps:
       - name: Checkout
         uses: actions/checkout@v3
