@@ -20,3 +20,8 @@ jobs:
         with:
           release_version: ${{ github.event.release.tag_name }}
           environment: production
+  smoke_tests_production:
+    runs-on: ubuntu-latest
+    needs: deploy_to_production
+    steps:
+      - run: Run all smoke tests
