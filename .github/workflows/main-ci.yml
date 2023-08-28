@@ -14,6 +14,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:    
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Version
+        id: version
+        uses: paulhatch/semantic-version@v5.1.0
+
+      - name: MAJOR
+        run: echo "MAJOR=${{ env.MAJOR }}"
+
+      - name: MINOR
+        run: echo "MINOR=${{ needs.version.outputs.minor }}
 
       - name: Build and package
         uses: "./.github/template/build"
