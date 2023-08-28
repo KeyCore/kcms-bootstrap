@@ -17,15 +17,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Version
+      - name: Get Version
         id: version
         uses: paulhatch/semantic-version@v5.1.0
 
-      - name: MAJOR
-        run: echo "MAJOR=${{ env.MAJOR }}"
 
-      - name: MINOR
-        run: echo "MINOR=${{ steps.version.outputs.minor }}"
+      - name: Version
+        run: |
+          echo "MAJOR=${{ steps.version.outputs.major }}"
+          echo "MINOR=${{ steps.version.outputs.minor }}"
+          echo "PATCH=${{ steps.version.outputs.patch }}"
 
       - name: Build and package
         uses: "./.github/template/build"
