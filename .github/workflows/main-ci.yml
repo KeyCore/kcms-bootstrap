@@ -25,7 +25,7 @@ jobs:
         run: echo "MAJOR=${{ env.MAJOR }}"
 
       - name: MINOR
-        run: echo "MINOR=${{ needs.version.outputs.minor }}"
+        run: echo "MINOR=${{ steps.version.outputs.minor }}"
 
       - name: Build and package
         uses: "./.github/template/build"
