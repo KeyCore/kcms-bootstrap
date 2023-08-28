@@ -20,6 +20,11 @@ jobs:
       - name: Get Version
         id: version
         uses: paulhatch/semantic-version@v5.1.0
+        with:
+          bump_each_commit: true
+          major_pattern: 1
+          minor_pattern: 1
+
 
 
       - name: Version
