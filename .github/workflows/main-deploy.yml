@@ -7,6 +7,7 @@ on:
 jobs:
   deploy_to_production:
     runs-on: ubuntu-latest
+    environment: prod
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -19,3 +20,10 @@ jobs:
         with:
           release_version: ${{ github.event.release.tag_name }}
           environment: production
+  smoke_tests_production:
+    runs-on: ubuntu-latest
+    needs: deploy_to_production
+    steps:
+      - run: echo Run smoke test suite b
+      - run: echo Run smoke test suite a
+      - run: echo Run smoke test suite c
